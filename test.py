@@ -1,5 +1,6 @@
 # Needs to add numberfields!!!
 
+from _pytest.junitxml import merge_family
 import streamlit as st
 import json
 import datetime
@@ -7,13 +8,11 @@ import datetime
 # All fields:
 # Vehicle_brand, Vehicle_model, Vehicle_generation, Production_year, Mileage_km, Power_HP, Displacement_cm3, Fuel_type, Drive, Transmission, Type, Doors_number, Colour, Origin_country, First_owner, Province, Month, Day, Year
 
-required_fields = ["Vehicle_brand", "Vehicle_model", "Vehicle_generation", "Production_year", "Mileage_km", "Fuel_type"]
-
+required_fields = ["Vehicle_brand", "Vehicle_model", "Vehicle_generation", "Mileage_km"]
 available_fields = ["Transmission", "Doors_number", "Colour", "First_owner"]
-
-neeeded = ['Condition', 'Production_year', 'Mileage_km', 'Power_HP', 'Displacement_cm3', 'Fuel_type', 'Drive', 'Transmission', 'Type', 'Doors_number', 'Colour', 'Origin_country', 'First_owner', 'Province', 'City','Features']
-
+neeeded = ["Fuel_type", 'Condition', 'Production_year', 'Millage', 'Power_HP', 'Displacement_cm3', 'Fuel_type', 'Drive', 'Transmission', 'Type', 'Doors_number', 'Colour', 'Origin_country', 'First_owner', 'Province', 'City', 'Features']
 features = ['ABS', 'Electricfrontwindows', 'Driversairbag', 'Powersteering', 'ASR(tractioncontrol)', 'Rearviewcamera', 'Heatedsidemirrors', 'CD', 'Electricallyadjustablemirrors', 'Passengersairbag', 'Alarm', 'Bluetooth', 'Automaticairconditioning', 'Airbagprotectingtheknees', 'Centrallocking', 'Immobilizer', 'Factoryradio', 'Alloywheels', 'Rainsensor', 'On-boardcomputer', 'Multifunctionsteeringwheel', 'AUXsocket', 'Xenonlights', 'USBsocket', 'MP3', 'ESP(stabilizationofthetrack)', 'Frontsideairbags', 'Rearparkingsensors', 'Isofix', 'Aircurtains', 'Tintedwindows', 'Daytimerunninglights', 'Rearsideairbags', 'Foglights', 'Twilightsensor', 'GPSnavigation', 'LEDlights', 'Manualairconditioning', 'Start-Stopsystem', 'Electrochromicrearviewmirror', 'Velorupholstery', 'Electrochromicsidemirrors', 'SDsocket', 'Dualzoneairconditioning', 'Adjustablesuspension', 'Panoramicroof', 'Sunroof', 'Frontparkingsensors', 'Heatedfrontseats', 'Leatherupholstery', 'Electricallyadjustableseats', 'Cruisecontrol', 'Parkingassistant', 'Speedlimiter', 'Heatedwindscreen', 'Electricrearwindows', 'Blindspotsensor', 'Shiftpaddles', 'Aftermarketradio', 'DVDplayer', 'CDchanger', 'Auxiliaryheating', 'Heatedrearseats', 'Four-zoneairconditioning', 'TVtuner', 'Roofrails', 'Activecruisecontrol', 'Hook', 'Laneassistant', 'HUD(head-updisplay)']
+fuel_types = ['Gasoline', 'Diesel', 'Gasoline + LPG', 'Hybrid', 'Gasoline + CNG', 'Hydrogen', 'Ethanol']
 
 # Load dictionary data
 def dictionary_read(file_path):
@@ -31,7 +30,7 @@ def generate_years_list():
 def main():
     # Required fields
     st.title("Check your car value!")
-#    st.header("Required fields:")
+# Required fields:
     
     # Load car data dictionary
     car_data_file_path = r"C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\app\dictionary.json"
@@ -50,9 +49,13 @@ def main():
     # Version selection based on the brand and model
     if brand in car_data and model in car_data[brand]:
         version = st.selectbox('Select Version', car_data[brand][model])
+                
+    fuel_type = st.selectbox('Select Fuel Type', fuel_types, key="fuel_type")
+    
 
     # Additional fields
     # st.header("Additional fields:")
+    production_year = None  # Initialize production_year variable
     for field in neeeded:
         if field not in required_fields:
             
@@ -61,13 +64,9 @@ def main():
                 condition = st.selectbox('Select Condition', ['Used', 'New'])
             elif field == 'Displacement_cm3':
                 displacement_cm3 = st.number_input('Select Displacement of engine', min_value=300, max_value=10000, step=1, key='displacement_cm3')
-
             elif field == 'Production_year':
                 max_year = datetime.datetime.now().year
                 production_year = st.selectbox('Select Production Year', generate_years_list(), index=0, format_func=lambda x: 'Year' if x == 0 else x, help="Choose production year of the vehicle, limited to the current year.")
-            elif field == 'Fuel_type':
-                fuel_types = ['Gasoline', 'Diesel', 'Gasoline + LPG', 'Hybrid', 'Gasoline + CNG', 'Hydrogen', 'Ethanol']
-                fuel_type = st.selectbox('Select Fuel Type', fuel_types)
             elif field == 'Drive':
                 drive_types = ['Front wheels', 'Rear wheels', '4x4 (permanent)', '4x4 (attached automatically)', '4x4 (attached manually)']
                 drive = st.selectbox('Select Drive', drive_types)
@@ -99,9 +98,22 @@ def main():
                 city = st.selectbox('Select City', cities)
             elif field == 'Features':
                 selected_features = st.multiselect('Select Features', features)
+            elif field == 'Millage':
+                millage = st.number_input('Select millage', min_value=0, max_value=2000000, step=1, key='millage')
             
-                
 
+# brand, model, version, 'fuel_type', 'condition', 'horse_power', 'displacement_cm3','drive','type', 'transmission', 'doors_number','colour','origin_country',
+# 'first_owner', 'province', 'city', 'production_year', 'mileage_km', 'displacement_cm3','features'       
+             
 
+# Dodaj przycisk i funkcje, ktora ma byc wywolana po jego nacisnieciu
+    if st.button("Show Data"):
+        data = [brand, model, version, fuel_type, condition, horse_power, displacement_cm3, drive, vehicle_type, transmission, doors_number, colour, origin_country, first_owner, province, city, production_year, millage, displacement_cm3, selected_features]
+        st.write(data)
+        
+    # Wczytanie listy z pliku JSON
+    with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\data\columns_df3_dum.json', 'r') as f:
+        columns_df3_dum2 = json.load(f)
 if __name__ == "__main__":
     main()
+
