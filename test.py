@@ -1,3 +1,5 @@
+# Needs to add numberfields!!!
+
 import streamlit as st
 import json
 import datetime
@@ -5,7 +7,7 @@ import datetime
 # All fields:
 # Vehicle_brand, Vehicle_model, Vehicle_generation, Production_year, Mileage_km, Power_HP, Displacement_cm3, Fuel_type, Drive, Transmission, Type, Doors_number, Colour, Origin_country, First_owner, Province, Month, Day, Year
 
-required_fields = ["Vehicle_brand", "Vehicle_model", "Vehicle_generation", "Production_year", "Mileage_km", "Power_HP", "Displacement_cm3", "Fuel_type"]
+required_fields = ["Vehicle_brand", "Vehicle_model", "Vehicle_generation", "Production_year", "Mileage_km", "Fuel_type"]
 
 available_fields = ["Transmission", "Doors_number", "Colour", "First_owner"]
 
@@ -53,9 +55,13 @@ def main():
     # st.header("Additional fields:")
     for field in neeeded:
         if field not in required_fields:
+            
             if field == 'Condition':
                 st.header("Additional informations")
                 condition = st.selectbox('Select Condition', ['Used', 'New'])
+            elif field == 'Displacement_cm3':
+                displacement_cm3 = st.number_input('Select Displacement of engine', min_value=300, max_value=10000, step=1, key='displacement_cm3')
+
             elif field == 'Production_year':
                 max_year = datetime.datetime.now().year
                 production_year = st.selectbox('Select Production Year', generate_years_list(), index=0, format_func=lambda x: 'Year' if x == 0 else x, help="Choose production year of the vehicle, limited to the current year.")
@@ -71,8 +77,10 @@ def main():
             elif field == 'Type':
                 vehicle_types = ['SUV', 'station_wagon', 'sedan', 'compact', 'city_cars', 'minivan', 'coupe', 'small_cars', 'convertible']
                 vehicle_type = st.selectbox('Select Type', vehicle_types)
+            elif field == 'Power_HP':
+                horse_power = st.number_input('Select Horse Power', min_value=30, max_value=500, step=1, key='power_hp')
             elif field == 'Doors_number':
-                doors_number = st.number_input('Select Doors Number', min_value=2, max_value=10, step=1)
+                doors_number = st.number_input('Select Doors Number', min_value=2, max_value=10, step=1, key='doors_number')
             elif field == 'Colour':
                 colours = ['black', 'gray', 'silver', 'white', 'blue', 'other', 'red', 'brown', 'green', 'burgundy', 'golden', 'beige', 'yellow', 'violet']
                 colour = st.selectbox('Select Colour', colours)
@@ -80,7 +88,7 @@ def main():
                 first_owner = st.selectbox('Select First Owner', ['No', 'Yes'])           
             elif field == 'Origin_country':
                 st.header("Location informations")
-                origin_countries = ['Brak danych', 'Poland', 'Germany', 'France', 'United States', 'Belgium', 'Switzerland', 'Netherlands', 'Italy', 'Austria', 'Sweden', 'Denmark', 'Canada', 'Other', 'Czech Republic', 'Great Britain', 'Luxembourg', 'Spain', 'Finland', 'Slovakia', 'Norway', 'Slovenia', 'Russia', 'Ireland', 'Estonia', 'Greece', 'Ukraine', 'Hungary', 'Lithuania', 'Monaco', 'Belarus', 'Romania', 'Croatia', 'Turkey', 'Iceland', 'Latvia', 'Bulgaria', 'Liechtenstein']
+                origin_countries = ['Brak danych', 'Poland', 'Germany', 'France', 'United States', 'Belgium', 'Switzerland', 'Netherlands', 'Italy', 'Austria', 'Sweden', 'Denmark', 'Canada']
                 origin_country = st.selectbox('Select Origin Country', origin_countries)
             elif field == 'Province':
                 provinces = ['Mazowieckie', 'Opolskie', 'Slaskie', 'Malopolskie', 'Pomorskie', 'Dolnoslaskie', 'Lodzkie', 'Kujawsko-pomorskie', 'Lubelskie', 'Podkarpackie', 'Lubuskie', 'Swietokrzyskie', 'Warminsko-mazurskie', 'Podlaskie', 'Zachodniopomorskie', 'Wielkopolskie', 'Nie znaleziono']
@@ -91,6 +99,7 @@ def main():
                 city = st.selectbox('Select City', cities)
             elif field == 'Features':
                 selected_features = st.multiselect('Select Features', features)
+            
                 
 
 
