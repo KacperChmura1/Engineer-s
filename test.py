@@ -10,6 +10,8 @@ import json
 import pandas as pd
 import numpy as np
 import pickle
+from joblib import dump, load
+
 # All fields:
 # Vehicle_brand, Vehicle_model, Vehicle_generation, Production_year, Mileage_km, Power_HP, Displacement_cm3, Fuel_type, Drive, Transmission, Type, Doors_number, Colour, Origin_country, First_owner, Province, Month, Day, Year
 
@@ -158,8 +160,9 @@ def main():
         df = pd.DataFrame(car_reshaped, index=[0], columns=columns_df3)
         st.write(df)
         # Scaler!!!!
-
-        pred = loaded_model.predict(df.iloc[[0]].values)
+        scaler = load(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\standard_scaler.joblib')
+        scaled = scaler.transform(df.iloc[[0]].values)
+        pred = loaded_model.predict(scaled)
         st.write(pred)
     # Wczytanie listy z pliku JSON
     with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\data\columns_df3_dum.json', 'r') as f:
