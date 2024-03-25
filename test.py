@@ -11,15 +11,26 @@ import pandas as pd
 import numpy as np
 import pickle
 from joblib import dump, load
-
+from tensorflow.keras.models import save_model, load_model
 required_fields = ["Vehicle_brand", "Vehicle_model", "Vehicle_generation", "Mileage_km"]
 available_fields = ["Transmission", "Doors_number", "Colour", "First_owner"]
 neeeded = ["Fuel_type", 'Condition', 'Production_year', 'Millage', 'Power_HP', 'Displacement_cm3', 'Fuel_type', 'Drive', 'Transmission', 'Type', 'Doors_number', 'Colour', 'Origin_country', 'First_owner', 'Province', 'City', 'Features']
 features = ['ABS', 'Electricfrontwindows', 'Driversairbag', 'Powersteering', 'ASR(tractioncontrol)', 'Rearviewcamera', 'Heatedsidemirrors', 'CD', 'Electricallyadjustablemirrors', 'Passengersairbag', 'Alarm', 'Bluetooth', 'Automaticairconditioning', 'Airbagprotectingtheknees', 'Centrallocking', 'Immobilizer', 'Factoryradio', 'Alloywheels', 'Rainsensor', 'On-boardcomputer', 'Multifunctionsteeringwheel', 'AUXsocket', 'Xenonlights', 'USBsocket', 'MP3', 'ESP(stabilizationofthetrack)', 'Frontsideairbags', 'Rearparkingsensors', 'Isofix', 'Aircurtains', 'Tintedwindows', 'Daytimerunninglights', 'Rearsideairbags', 'Foglights', 'Twilightsensor', 'GPSnavigation', 'LEDlights', 'Manualairconditioning', 'Start-Stopsystem', 'Electrochromicrearviewmirror', 'Velorupholstery', 'Electrochromicsidemirrors', 'SDsocket', 'Dualzoneairconditioning', 'Adjustablesuspension', 'Panoramicroof', 'Sunroof', 'Frontparkingsensors', 'Heatedfrontseats', 'Leatherupholstery', 'Electricallyadjustableseats', 'Cruisecontrol', 'Parkingassistant', 'Speedlimiter', 'Heatedwindscreen', 'Electricrearwindows', 'Blindspotsensor', 'Shiftpaddles', 'Aftermarketradio', 'DVDplayer', 'CDchanger', 'Auxiliaryheating', 'Heatedrearseats', 'Four-zoneairconditioning', 'TVtuner', 'Roofrails', 'Activecruisecontrol', 'Hook', 'Laneassistant', 'HUD(head-updisplay)']
 
+selected_model = "ANN"
 with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\data\columns_df3_dum.json', 'r') as f:
             columns_df3 = json.load(f)
 # Load dictionary data
+
+def load_selected_model(selected_model):
+    if selected_model == 'RandomForest (Recommended)':
+        with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\random_forest_less_then_200k.pkl', 'rb') as file:
+            loaded_model = pickle.load(file)
+        return loaded_model, selected_model
+    elif selected_model == 'ANN':
+        loaded_model = load_model(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\less_then_200k.h5')
+        return loaded_model, selected_model
+    
 def dictionary_read(file_path):
     with open(file_path, 'r') as file:
         dictionary = json.load(file)
@@ -41,7 +52,7 @@ def filter_columns_by_prefix(prefix, columns, x):
                 filtered_columns.append(0)
     return filtered_columns
 
-def predict_car_value(loaded_model, scaler, columns_df3, brand, model, version, fuel_type, condition, horse_power, displacement_cm3, drive, vehicle_type, transmission, doors_number, colour, origin_country, first_owner, province, city, production_year, millage, selected_features):
+def predict_car_value(selected_model, scaler, columns_df3, brand, model, version, fuel_type, condition, horse_power, displacement_cm3, drive, vehicle_type, transmission, doors_number, colour, origin_country, first_owner, province, city, production_year, millage, selected_features):
     data = [brand, model, version, fuel_type, condition, horse_power, displacement_cm3, drive, vehicle_type, transmission, doors_number, colour, origin_country, first_owner, province, city, production_year, millage, displacement_cm3, selected_features]
     selected_indices = [features.index(feature) if feature in selected_features else -1 for feature in features]
     selected_indices = selected_indices + [-1] * (len(features) - len(selected_indices))
@@ -70,23 +81,34 @@ def predict_car_value(loaded_model, scaler, columns_df3, brand, model, version, 
     df = pd.DataFrame(car_reshaped, index=[0], columns=columns_df3)
     
     scaled = scaler.transform(df.iloc[[0]].values)
-    pred = loaded_model.predict(scaled)
+    model, name = load_selected_model(selected_model)
     
-    return df, pred
+    if name == "ANN":
+        pred1 = model.predict(scaled)[0]
+    else:
+        pred1 = model.predict(scaled)
+    
+    return df, pred1
 # Main function
 def main():
     # Loading randomforst model
-    with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\75random_forest_to_app.pkl', 'rb') as file:
-        loaded_model = pickle.load(file)
+    
     # Loading scaler
-    scaler = load(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\standard_scaler.joblib')
-    # Loading columns names
-    with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\data\columns_df3_dum.json', 'r') as f:
-        columns_df3_dum2 = json.load(f)    
+    scaler = load(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\standard_scaler2.joblib')
+    # Loading columns names 
     # Loading data regarding makes, models and generations of cars
+
+    with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\random_forest_less_then_200k.pkl', 'rb') as file:           
+        model = pickle.load(file)
     car_data = dictionary_read(r"C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\app\dictionary.json")
 
     st.title("Check your car value!")
+    
+    st.sidebar.title('Select Model')
+    selected_model = st.sidebar.selectbox('Choose Model', ['RandomForest (Recommended)', 'ANN'])
+
+    
+    st.sidebar.success(f"Model {selected_model} loaded successfully!")
     st.header("Main informations")
     
     # Brand selection
@@ -143,7 +165,7 @@ def main():
 # Predict button calls the predict_car_value function
     if st.button("Predict"):
         final_message = "The value of your car is "
-        df, pred = predict_car_value(loaded_model, scaler, columns_df3, brand, model, version, fuel_type, condition, horse_power, displacement_cm3, drive, vehicle_type, transmission, doors_number, colour, origin_country, first_owner, province, city, production_year, millage, selected_features)
+        df, pred = predict_car_value(selected_model, scaler, columns_df3, brand, model, version, fuel_type, condition, horse_power, displacement_cm3, drive, vehicle_type, transmission, doors_number, colour, origin_country, first_owner, province, city, production_year, millage, selected_features)
         pred_formatted = f'<span style="color:green; font-size:45px;">{final_message + str(pred[0]) + " PLN!"}</span>'  
         st.write(pred_formatted, unsafe_allow_html=True)
 
