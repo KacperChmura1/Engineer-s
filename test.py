@@ -25,9 +25,9 @@ def load_selected_model(selected_model):
         with open('app/random_forest_less_then_200k.pkl', 'rb') as file:
             loaded_model = pickle.load(file)
         return loaded_model, selected_model
-    elif selected_model == 'ANN':
-        loaded_model = load_model('app/less_then_200k.h5')
-        return loaded_model, selected_model
+    #elif selected_model == 'ANN':
+    #    loaded_model = load_model('app/less_then_200k.h5')
+     #   return loaded_model, selected_model
     
 def dictionary_read(file_path):
     with open(file_path, 'r') as file:
@@ -132,7 +132,7 @@ def main():
                 displacement_cm3 = st.number_input('Select Displacement of engine', min_value=300, max_value=10000, step=1, key='displacement_cm3')
             elif field == 'Production_yea':
                 max_year = datetime.datetime.now().year
-                production_year = st.selectbox('Select Production Yea', generate_years_list(), index=0, format_func=lambda x: 'Yea' if x == 0 else x, help="Choose production year of the vehicle, limited to the current year.")
+                production_year = st.selectbox('Select Production Year', generate_years_list(), index=0, format_func=lambda x: 'Yea' if x == 0 else x, help="Choose production year of the vehicle, limited to the current year.")
             elif field == 'Drive':
                 drive = st.selectbox('Select Drive', ['Front wheels', 'Rear wheels', '4x4 (permanent)', '4x4 (attached automatically)', '4x4 (attached manually)'])
             elif field == 'Transmission':
@@ -140,13 +140,13 @@ def main():
             elif field == 'Type':
                 vehicle_type = st.selectbox('Select Type', ['SUV', 'station_wagon', 'sedan', 'compact', 'city_cars', 'minivan', 'coupe', 'small_cars', 'convertible'])
             elif field == 'Power_HP':
-                horse_power = st.number_input('Select Horse Powe', min_value=30, max_value=500, step=1, key='power_hp')
+                horse_power = st.number_input('Select Horse Power', min_value=30, max_value=500, step=1, key='power_hp')
             elif field == 'Doors_numbe':
-                doors_number = st.number_input('Select Doors Numbe', min_value=2, max_value=10, step=1, key='doors_numbe')
+                doors_number = st.number_input('Select Doors Number', min_value=2, max_value=10, step=1, key='doors_numbe')
             elif field == 'Colou':
                 colour = st.selectbox('Select Colou', ['black', 'gray', 'silve', 'white', 'blue', 'othe', 'red', 'brown', 'green', 'burgundy', 'golden', 'beige', 'yellow', 'violet'])
             elif field == 'First_owne':
-                first_owner = st.selectbox('Select First Owne', ['No', 'Yes'])           
+                first_owner = st.selectbox('Select First Owner', ['No', 'Yes'])           
             elif field == 'Origin_country':
                 st.header("Location informations")
                 origin_country = st.selectbox('Select Origin Country', ['Brak danych', 'Poland', 'Germany', 'France', 'United States', 'Belgium', 'Switzerland', 'Netherlands', 'Italy', 'Austria', 'Sweden', 'Denmark', 'Canada'])
