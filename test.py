@@ -92,7 +92,7 @@ def main():
     # Loading randomforst model
     
     # Loading scaler
-    scaler = load('models/standard_scaler2.joblib')
+    scaler = load('app/standard_scaler2.joblib')
     # Loading columns names 
     # Loading data regarding makes, models and generations of cars
 
