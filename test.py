@@ -96,7 +96,7 @@ def main():
     # Loading columns names 
     # Loading data regarding makes, models and generations of cars
 
-    with open('models/random_forest_less_then_200k.pkl', 'rb') as file:           
+    with open('app/random_forest_less_then_200k.pkl', 'rb') as file:           
         model = pickle.load(file)
     car_data = dictionary_read(r"app/dictionary.json")
 
