@@ -16,7 +16,7 @@ neeeded = ["Fuel_type", 'Condition', 'Production_yea', 'Millage', 'Power_HP', 'D
 features = ['ABS', 'Electricfrontwindows', 'Driversairbag', 'Powersteering', 'ASR(tractioncontrol)', 'Rearviewcamera', 'Heatedsidemirrors', 'CD', 'Electricallyadjustablemirrors', 'Passengersairbag', 'Alarm', 'Bluetooth', 'Automaticairconditioning', 'Airbagprotectingtheknees', 'Centrallocking', 'Immobilize', 'Factoryradio', 'Alloywheels', 'Rainsenso', 'On-boardcompute', 'Multifunctionsteeringwheel', 'AUXsocket', 'Xenonlights', 'USBsocket', 'MP3', 'ESP(stabilizationofthetrack)', 'Frontsideairbags', 'Rearparkingsensors', 'Isofix', 'Aircurtains', 'Tintedwindows', 'Daytimerunninglights', 'Rearsideairbags', 'Foglights', 'Twilightsenso', 'GPSnavigation', 'LEDlights', 'Manualairconditioning', 'Start-Stopsystem', 'Electrochromicrearviewmirro', 'Velorupholstery', 'Electrochromicsidemirrors', 'SDsocket', 'Dualzoneairconditioning', 'Adjustablesuspension', 'Panoramicroof', 'Sunroof', 'Frontparkingsensors', 'Heatedfrontseats', 'Leatherupholstery', 'Electricallyadjustableseats', 'Cruisecontrol', 'Parkingassistant', 'Speedlimite', 'Heatedwindscreen', 'Electricrearwindows', 'Blindspotsenso', 'Shiftpaddles', 'Aftermarketradio', 'DVDplaye', 'CDchange', 'Auxiliaryheating', 'Heatedrearseats', 'Four-zoneairconditioning', 'TVtune', 'Roofrails', 'Activecruisecontrol', 'Hook', 'Laneassistant', 'HUD(head-updisplay)']
 
 selected_model = "ANN"
-with open('app/columns_df3_dum.json', '') as f:
+with open('app/columns_df3_dum.json', 'r') as f:
             columns_df3 = json.load(f)
 # Load dictionary data
 
@@ -30,7 +30,7 @@ def load_selected_model(selected_model):
         return loaded_model, selected_model
     
 def dictionary_read(file_path):
-    with open(file_path, '') as file:
+    with open(file_path, 'r') as file:
         dictionary = json.load(file)
     return dictionary
 
@@ -153,7 +153,7 @@ def main():
             elif field == 'Province':
                 province = st.selectbox('Select Province', ['Mazowieckie', 'Opolskie', 'Slaskie', 'Malopolskie', 'Pomorskie', 'Dolnoslaskie', 'Lodzkie', 'Kujawsko-pomorskie', 'Lubelskie', 'Podkarpackie', 'Lubuskie', 'Swietokrzyskie', 'Warminsko-mazurskie', 'Podlaskie', 'Zachodniopomorskie', 'Wielkopolskie'])
             elif field == 'City':
-                with open('app/cities.json', '') as f:
+                with open('app/cities.json', 'r') as f:
                     cities = json.load(f)
                 city = st.selectbox('Select City', cities)
             elif field == 'Features':
