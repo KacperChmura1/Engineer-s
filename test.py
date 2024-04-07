@@ -18,17 +18,17 @@ neeeded = ["Fuel_type", 'Condition', 'Production_year', 'Millage', 'Power_HP', '
 features = ['ABS', 'Electricfrontwindows', 'Driversairbag', 'Powersteering', 'ASR(tractioncontrol)', 'Rearviewcamera', 'Heatedsidemirrors', 'CD', 'Electricallyadjustablemirrors', 'Passengersairbag', 'Alarm', 'Bluetooth', 'Automaticairconditioning', 'Airbagprotectingtheknees', 'Centrallocking', 'Immobilizer', 'Factoryradio', 'Alloywheels', 'Rainsensor', 'On-boardcomputer', 'Multifunctionsteeringwheel', 'AUXsocket', 'Xenonlights', 'USBsocket', 'MP3', 'ESP(stabilizationofthetrack)', 'Frontsideairbags', 'Rearparkingsensors', 'Isofix', 'Aircurtains', 'Tintedwindows', 'Daytimerunninglights', 'Rearsideairbags', 'Foglights', 'Twilightsensor', 'GPSnavigation', 'LEDlights', 'Manualairconditioning', 'Start-Stopsystem', 'Electrochromicrearviewmirror', 'Velorupholstery', 'Electrochromicsidemirrors', 'SDsocket', 'Dualzoneairconditioning', 'Adjustablesuspension', 'Panoramicroof', 'Sunroof', 'Frontparkingsensors', 'Heatedfrontseats', 'Leatherupholstery', 'Electricallyadjustableseats', 'Cruisecontrol', 'Parkingassistant', 'Speedlimiter', 'Heatedwindscreen', 'Electricrearwindows', 'Blindspotsensor', 'Shiftpaddles', 'Aftermarketradio', 'DVDplayer', 'CDchanger', 'Auxiliaryheating', 'Heatedrearseats', 'Four-zoneairconditioning', 'TVtuner', 'Roofrails', 'Activecruisecontrol', 'Hook', 'Laneassistant', 'HUD(head-updisplay)']
 
 selected_model = "ANN"
-with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\data\columns_df3_dum.json', 'r') as f:
+with open(r'data\columns_df3_dum.json', 'r') as f:
             columns_df3 = json.load(f)
 # Load dictionary data
 
 def load_selected_model(selected_model):
     if selected_model == 'RandomForest (Recommended)':
-        with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\random_forest_less_then_200k.pkl', 'rb') as file:
+        with open(r'app\random_forest_less_then_200k.pkl', 'rb') as file:
             loaded_model = pickle.load(file)
         return loaded_model, selected_model
     elif selected_model == 'ANN':
-        loaded_model = load_model(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\less_then_200k.h5')
+        loaded_model = load_model(r'app\less_then_200k.h5')
         return loaded_model, selected_model
     
 def dictionary_read(file_path):
@@ -94,13 +94,13 @@ def main():
     # Loading randomforst model
     
     # Loading scaler
-    scaler = load(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\standard_scaler2.joblib')
+    scaler = load(r'models\standard_scaler2.joblib')
     # Loading columns names 
     # Loading data regarding makes, models and generations of cars
 
-    with open(r'C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\models\random_forest_less_then_200k.pkl', 'rb') as file:           
+    with open(r'models\random_forest_less_then_200k.pkl', 'rb') as file:           
         model = pickle.load(file)
-    car_data = dictionary_read(r"C:\Users\Kacper\Desktop\uczelnia\sem6\Praca\app\dictionary.json")
+    car_data = dictionary_read(r"app\dictionary.json")
 
     st.title("Check your car value!")
     
