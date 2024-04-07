@@ -103,8 +103,8 @@ def main():
     st.title("Check your car value!")
     
     st.sidebar.title('Select Model')
-    selected_model = st.sidebar.selectbox('Choose Model', ['RandomForest (Recommended)', 'ANN'])
-
+    # selected_model = st.sidebar.selectbox('Choose Model', ['RandomForest (Recommended)', 'ANN'])
+    selected_model = st.sidebar.selectbox('Choose Model', ['RandomForest (Recommended)'])
     
     st.sidebar.success(f"Model {selected_model} loaded successfully!")
     st.header("Main informations")
