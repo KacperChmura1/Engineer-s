@@ -3,4 +3,4 @@ pandas
 numpy
 joblib
 tensorflow
-scikit-learn
+scikit-learn=1.2.2=py39hd77b12b_1
