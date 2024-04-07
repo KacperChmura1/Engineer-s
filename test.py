@@ -12,25 +12,25 @@ from joblib import dump, load
 from tensorflow.keras.models import save_model, load_model
 required_fields = ["Vehicle_brand", "Vehicle_model", "Vehicle_generation", "Mileage_km"]
 available_fields = ["Transmission", "Doors_number", "Colour", "First_owner"]
-neeeded = ["Fuel_type", 'Condition', 'Production_year', 'Millage', 'Power_HP', 'Displacement_cm3', 'Fuel_type', 'Drive', 'Transmission', 'Type', 'Doors_number', 'Colour', 'Origin_country', 'First_owner', 'Province', 'City', 'Features']
-features = ['ABS', 'Electricfrontwindows', 'Driversairbag', 'Powersteering', 'ASR(tractioncontrol)', 'Rearviewcamera', 'Heatedsidemirrors', 'CD', 'Electricallyadjustablemirrors', 'Passengersairbag', 'Alarm', 'Bluetooth', 'Automaticairconditioning', 'Airbagprotectingtheknees', 'Centrallocking', 'Immobilizer', 'Factoryradio', 'Alloywheels', 'Rainsensor', 'On-boardcomputer', 'Multifunctionsteeringwheel', 'AUXsocket', 'Xenonlights', 'USBsocket', 'MP3', 'ESP(stabilizationofthetrack)', 'Frontsideairbags', 'Rearparkingsensors', 'Isofix', 'Aircurtains', 'Tintedwindows', 'Daytimerunninglights', 'Rearsideairbags', 'Foglights', 'Twilightsensor', 'GPSnavigation', 'LEDlights', 'Manualairconditioning', 'Start-Stopsystem', 'Electrochromicrearviewmirror', 'Velorupholstery', 'Electrochromicsidemirrors', 'SDsocket', 'Dualzoneairconditioning', 'Adjustablesuspension', 'Panoramicroof', 'Sunroof', 'Frontparkingsensors', 'Heatedfrontseats', 'Leatherupholstery', 'Electricallyadjustableseats', 'Cruisecontrol', 'Parkingassistant', 'Speedlimiter', 'Heatedwindscreen', 'Electricrearwindows', 'Blindspotsensor', 'Shiftpaddles', 'Aftermarketradio', 'DVDplayer', 'CDchanger', 'Auxiliaryheating', 'Heatedrearseats', 'Four-zoneairconditioning', 'TVtuner', 'Roofrails', 'Activecruisecontrol', 'Hook', 'Laneassistant', 'HUD(head-updisplay)']
+neeeded = ["Fuel_type", 'Condition', 'Production_yea', 'Millage', 'Power_HP', 'Displacement_cm3', 'Fuel_type', 'Drive', 'Transmission', 'Type', 'Doors_numbe', 'Colou', 'Origin_country', 'First_owne', 'Province', 'City', 'Features']
+features = ['ABS', 'Electricfrontwindows', 'Driversairbag', 'Powersteering', 'ASR(tractioncontrol)', 'Rearviewcamera', 'Heatedsidemirrors', 'CD', 'Electricallyadjustablemirrors', 'Passengersairbag', 'Alarm', 'Bluetooth', 'Automaticairconditioning', 'Airbagprotectingtheknees', 'Centrallocking', 'Immobilize', 'Factoryradio', 'Alloywheels', 'Rainsenso', 'On-boardcompute', 'Multifunctionsteeringwheel', 'AUXsocket', 'Xenonlights', 'USBsocket', 'MP3', 'ESP(stabilizationofthetrack)', 'Frontsideairbags', 'Rearparkingsensors', 'Isofix', 'Aircurtains', 'Tintedwindows', 'Daytimerunninglights', 'Rearsideairbags', 'Foglights', 'Twilightsenso', 'GPSnavigation', 'LEDlights', 'Manualairconditioning', 'Start-Stopsystem', 'Electrochromicrearviewmirro', 'Velorupholstery', 'Electrochromicsidemirrors', 'SDsocket', 'Dualzoneairconditioning', 'Adjustablesuspension', 'Panoramicroof', 'Sunroof', 'Frontparkingsensors', 'Heatedfrontseats', 'Leatherupholstery', 'Electricallyadjustableseats', 'Cruisecontrol', 'Parkingassistant', 'Speedlimite', 'Heatedwindscreen', 'Electricrearwindows', 'Blindspotsenso', 'Shiftpaddles', 'Aftermarketradio', 'DVDplaye', 'CDchange', 'Auxiliaryheating', 'Heatedrearseats', 'Four-zoneairconditioning', 'TVtune', 'Roofrails', 'Activecruisecontrol', 'Hook', 'Laneassistant', 'HUD(head-updisplay)']
 
 selected_model = "ANN"
-with open(r'app\columns_df3_dum.json', 'r') as f:
+with open('app/columns_df3_dum.json', '') as f:
             columns_df3 = json.load(f)
 # Load dictionary data
 
 def load_selected_model(selected_model):
     if selected_model == 'RandomForest (Recommended)':
-        with open(r'app\random_forest_less_then_200k.pkl', 'rb') as file:
+        with open('app/random_forest_less_then_200k.pkl', 'rb') as file:
             loaded_model = pickle.load(file)
         return loaded_model, selected_model
     elif selected_model == 'ANN':
-        loaded_model = load_model(r'app\less_then_200k.h5')
+        loaded_model = load_model('app/less_then_200k.h5')
         return loaded_model, selected_model
     
 def dictionary_read(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, '') as file:
         dictionary = json.load(file)
     return dictionary
 
@@ -92,13 +92,13 @@ def main():
     # Loading randomforst model
     
     # Loading scaler
-    scaler = load(r'models\standard_scaler2.joblib')
+    scaler = load('models/standard_scaler2.joblib')
     # Loading columns names 
     # Loading data regarding makes, models and generations of cars
 
-    with open(r'models\random_forest_less_then_200k.pkl', 'rb') as file:           
+    with open('models/random_forest_less_then_200k.pkl', 'rb') as file:           
         model = pickle.load(file)
-    car_data = dictionary_read(r"app\dictionary.json")
+    car_data = dictionary_read(r"app/dictionary.json")
 
     st.title("Check your car value!")
     
@@ -130,9 +130,9 @@ def main():
                 condition = st.selectbox('Select Condition', ['Used', 'New'])
             elif field == 'Displacement_cm3':
                 displacement_cm3 = st.number_input('Select Displacement of engine', min_value=300, max_value=10000, step=1, key='displacement_cm3')
-            elif field == 'Production_year':
+            elif field == 'Production_yea':
                 max_year = datetime.datetime.now().year
-                production_year = st.selectbox('Select Production Year', generate_years_list(), index=0, format_func=lambda x: 'Year' if x == 0 else x, help="Choose production year of the vehicle, limited to the current year.")
+                production_year = st.selectbox('Select Production Yea', generate_years_list(), index=0, format_func=lambda x: 'Yea' if x == 0 else x, help="Choose production year of the vehicle, limited to the current year.")
             elif field == 'Drive':
                 drive = st.selectbox('Select Drive', ['Front wheels', 'Rear wheels', '4x4 (permanent)', '4x4 (attached automatically)', '4x4 (attached manually)'])
             elif field == 'Transmission':
@@ -140,20 +140,20 @@ def main():
             elif field == 'Type':
                 vehicle_type = st.selectbox('Select Type', ['SUV', 'station_wagon', 'sedan', 'compact', 'city_cars', 'minivan', 'coupe', 'small_cars', 'convertible'])
             elif field == 'Power_HP':
-                horse_power = st.number_input('Select Horse Power', min_value=30, max_value=500, step=1, key='power_hp')
-            elif field == 'Doors_number':
-                doors_number = st.number_input('Select Doors Number', min_value=2, max_value=10, step=1, key='doors_number')
-            elif field == 'Colour':
-                colour = st.selectbox('Select Colour', ['black', 'gray', 'silver', 'white', 'blue', 'other', 'red', 'brown', 'green', 'burgundy', 'golden', 'beige', 'yellow', 'violet'])
-            elif field == 'First_owner':
-                first_owner = st.selectbox('Select First Owner', ['No', 'Yes'])           
+                horse_power = st.number_input('Select Horse Powe', min_value=30, max_value=500, step=1, key='power_hp')
+            elif field == 'Doors_numbe':
+                doors_number = st.number_input('Select Doors Numbe', min_value=2, max_value=10, step=1, key='doors_numbe')
+            elif field == 'Colou':
+                colour = st.selectbox('Select Colou', ['black', 'gray', 'silve', 'white', 'blue', 'othe', 'red', 'brown', 'green', 'burgundy', 'golden', 'beige', 'yellow', 'violet'])
+            elif field == 'First_owne':
+                first_owner = st.selectbox('Select First Owne', ['No', 'Yes'])           
             elif field == 'Origin_country':
                 st.header("Location informations")
                 origin_country = st.selectbox('Select Origin Country', ['Brak danych', 'Poland', 'Germany', 'France', 'United States', 'Belgium', 'Switzerland', 'Netherlands', 'Italy', 'Austria', 'Sweden', 'Denmark', 'Canada'])
             elif field == 'Province':
                 province = st.selectbox('Select Province', ['Mazowieckie', 'Opolskie', 'Slaskie', 'Malopolskie', 'Pomorskie', 'Dolnoslaskie', 'Lodzkie', 'Kujawsko-pomorskie', 'Lubelskie', 'Podkarpackie', 'Lubuskie', 'Swietokrzyskie', 'Warminsko-mazurskie', 'Podlaskie', 'Zachodniopomorskie', 'Wielkopolskie'])
             elif field == 'City':
-                with open(r'app\cities.json', 'r') as f:
+                with open('app/cities.json', '') as f:
                     cities = json.load(f)
                 city = st.selectbox('Select City', cities)
             elif field == 'Features':
