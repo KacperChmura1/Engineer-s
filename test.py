@@ -155,8 +155,23 @@ def car_value_prediction_form(car_data, columns_df3, features, scaler):
         pred_formatted = f'<span style="color:green; font-size:45px;">{final_message + str(pred[0]) + " PLN!"}</span>'  
         st.write(pred_formatted, unsafe_allow_html=True)
 def vis():
-    st.write("Visualization page will be implemented here.")
+    dark_html = """
+    <style>
+    body {
+        background-color: #222831;
+        color: #eeeeee;
+    }
+    </style>
+    """
+    vis_choose = st.sidebar.selectbox('Choose Visualization type', ["Mean age","Mean millage", "Mean horsepower", "Mean price"])
     
+    vis_path = "app/vis/"
+    
+    with open(vis_path + vis_choose + ".html", "r", encoding="utf-8") as f:
+        map_html = f.read()
+
+    st.write(dark_html, unsafe_allow_html=True)
+    st.components.v1.html(map_html, width=1000 , height=800)
 
 def main():
     # Load car data
