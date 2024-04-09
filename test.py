@@ -87,46 +87,34 @@ def predict_car_value(selected_model, scaler, columns_df3, brand, model, version
         pred1 = model.predict(scaled)
     
     return df, pred1
-# Main function
-def main():
-    # Loading randomforst model
-    
-    # Loading scaler
-    scaler = load('app/standard_scaler2.joblib')
-    # Loading columns names 
-    # Loading data regarding makes, models and generations of cars
-
-    with open('app/random_forest_less_then_200k.pkl', 'rb') as file:           
-        model = pickle.load(file)
-    car_data = dictionary_read(r"app/dictionary.json")
-
+def car_value_prediction_form(car_data, columns_df3, features, scaler):
     st.title("Check your car value!")
-    
+
     st.sidebar.title('Select Model')
-    # selected_model = st.sidebar.selectbox('Choose Model', ['RandomForest (Recommended)', 'ANN'])
     selected_model = st.sidebar.selectbox('Choose Model', ['RandomForest (Recommended)'])
-    
+
     st.sidebar.success(f"Model {selected_model} loaded successfully!")
     st.header("Main informations")
-    
+
     # Brand selection
     brand = st.selectbox('Select Brand', list(car_data.keys()))
 
     # Model selection based on the brand
     if brand in car_data:
         model = st.selectbox('Select Model', list(car_data[brand].keys()))
-        
+
     # Version selection based on the brand and model
     if brand in car_data and model in car_data[brand]:
         version = st.selectbox('Select Version', car_data[brand][model])
-              
+
     fuel_type = st.selectbox('Select Fuel Type', ['Gasoline', 'Diesel', 'Gasoline + LPG', 'Hybrid', 'Gasoline + CNG', 'Hydrogen', 'Ethanol'], key="fuel_type")
-   
+
     st.header("Additional informations")
+    
     # Additional fields
     for field in neeeded:
-        if field not in required_fields:           
-            if field == 'Condition':       
+        if field not in required_fields:
+            if field == 'Condition':
                 condition = st.selectbox('Select Condition', ['Used', 'New'])
             elif field == 'Displacement_cm3':
                 displacement_cm3 = st.number_input('Select Displacement of engine', min_value=300, max_value=10000, step=1, key='displacement_cm3')
@@ -159,13 +147,35 @@ def main():
             elif field == 'Features':
                 selected_features = st.multiselect('Select Features', features)
             elif field == 'Millage':
-                millage = st.number_input('Select millage', min_value=0, max_value=2000000, step=1, key='millage')                     
-# Predict button calls the predict_car_value function
+                millage = st.number_input('Select millage', min_value=0, max_value=2000000, step=1, key='millage')
+
     if st.button("Predict"):
         final_message = "The value of your car is "
         df, pred = predict_car_value(selected_model, scaler, columns_df3, brand, model, version, fuel_type, condition, horse_power, displacement_cm3, drive, vehicle_type, transmission, doors_number, colour, origin_country, first_owner, province, city, production_year, millage, selected_features)
         pred_formatted = f'<span style="color:green; font-size:45px;">{final_message + str(pred[0]) + " PLN!"}</span>'  
         st.write(pred_formatted, unsafe_allow_html=True)
+def vis():
+    st.write("Visualization page will be implemented here.")
+    
+
+def main():
+    # Load car data
+    car_data = dictionary_read(r"app/dictionary.json")
+    # Load scaler
+    scaler = load('app/standard_scaler2.joblib')
+    # Load columns names
+    with open('app/columns_df3_dum.json', 'r') as f:
+        columns_df3 = json.load(f)
+
+    # Sidebar navigation
+    st.sidebar.title('Select Site')
+    page = st.sidebar.selectbox('Choose Site', ["Car Value Prediction","Visualization"])
+
+    if page == "Car Value Prediction":
+        car_value_prediction_form(car_data, columns_df3, features, scaler)
+    elif page == "Visualization":
+        vis()
+        
 
 if __name__ == "__main__":
     main()
